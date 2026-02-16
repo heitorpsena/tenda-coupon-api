@@ -26,8 +26,10 @@ public class Coupon {
     private String code;
     private String description;
     private BigDecimal discountValue;
+
     @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate expirationDate;
+    
     private Boolean published;
     private boolean deleted;
 
