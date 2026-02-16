@@ -6,6 +6,7 @@ import br.com.tenda.tenda_coupon_api.domain.model.Coupon;
 import br.com.tenda.tenda_coupon_api.infra.dto.CreateCouponRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -23,7 +24,7 @@ public class CouponController {
 
     @Operation(summary = "Create a new coupon")
     @PostMapping
-    public ResponseEntity<Coupon> create(@RequestBody CreateCouponRequest req) {
+    public ResponseEntity<Coupon> create(@Valid @RequestBody CreateCouponRequest req) {
         return ResponseEntity.ok(createCouponService.execute(req));
     }
 

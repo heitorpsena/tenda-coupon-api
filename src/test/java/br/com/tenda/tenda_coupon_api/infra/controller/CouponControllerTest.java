@@ -19,6 +19,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(CouponController.class)
@@ -108,6 +109,89 @@ class CouponControllerTest {
 
         mockMvc.perform(delete("/coupons/" + id))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    void shouldReturnValidationErrorWhenDiscountIsInvalid() throws Exception {
+
+        var request = """
+        {
+          "code": "ABC123",
+          "description": "teste",
+          "discountValue": 0.1,
+          "expirationDate": "%s",
+          "published": true
+        }
+        """.formatted(LocalDate.now().plusDays(1));
+
+        mockMvc.perform(post("/coupons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.messages.discountValue")
+                        .value("Desconto mínimo é 0.5"));
+    }
+
+    @Test
+    void shouldReturnValidationErrorWhenDiscountIsNull() throws Exception {
+
+        var request = """
+        {
+          "code": "ABC123",
+          "description": "teste",
+          "expirationDate": "%s",
+          "published": true
+        }
+        """.formatted(LocalDate.now().plusDays(1));
+
+        mockMvc.perform(post("/coupons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.messages.discountValue").exists());
+    }
+
+    @Test
+    void shouldReturnValidationErrorWhenCodeIsInvalid() throws Exception {
+
+        var request = """
+    {
+      "code": "ABC1",
+      "description": "teste",
+      "discountValue": 1,
+      "expirationDate": "%s",
+      "published": true
+    }
+    """.formatted(LocalDate.now().plusDays(1));
+
+        mockMvc.perform(post("/coupons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.messages.code").exists());
+    }
+
+    @Test
+    void shouldReturnValidationErrorWhenCouponCodeIsNull() throws Exception {
+
+        var request = """
+    {
+      "description": "teste",
+      "discountValue": 1,
+      "expirationDate": "%s",
+      "published": true
+    }
+    """.formatted(LocalDate.now().plusDays(1));
+
+        mockMvc.perform(post("/coupons")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(request))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.error").value("Validation Error"))
+                .andExpect(jsonPath("$.messages").exists())
+                .andExpect(jsonPath("$.messages.code").exists());
     }
 
     private Coupon mockCoupon() {

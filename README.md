@@ -207,7 +207,7 @@ POST /coupons
   "code": "ABC123",
   "description": "10% discount",
   "discountValue": 1.5,
-  "expirationDate": "2026-12-31",
+  "expirationDate": "31/12/2026",
   "published": true
 }
 ```

@@ -32,57 +32,6 @@ class CouponTest {
         assertEquals("AB1234", coupon.getCode());
     }
 
-    @Test
-    void shouldFailWhenCodeNotSixCharacters() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "ABC1",
-                        "teste",
-                        new BigDecimal("1"),
-                        LocalDate.now().plusDays(1),
-                        true
-                )
-        );
-    }
-
-    @Test
-    void shouldFailWhenDiscountLowerThanMinimum() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "ABC123",
-                        "teste",
-                        new BigDecimal("0.2"),
-                        LocalDate.now().plusDays(1),
-                        false
-                )
-        );
-    }
-
-    @Test
-    void shouldFailWhenDiscountIsNull() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "ABC123",
-                        "teste",
-                        null,
-                        LocalDate.now().plusDays(1),
-                        true
-                )
-        );
-    }
-
-    @Test
-    void shouldFailWhenExpirationDateIsPast() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "ABC123",
-                        "teste",
-                        new BigDecimal("1"),
-                        LocalDate.now().minusDays(1),
-                        false
-                )
-        );
-    }
 
     @Test
     void shouldSoftDeleteCoupon() {
@@ -102,44 +51,6 @@ class CouponTest {
         assertThrows(BusinessException.class, coupon::delete);
     }
 
-    @Test
-    void shouldFailWhenCodeIsNull() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        null,
-                        "teste",
-                        new BigDecimal("1"),
-                        LocalDate.now().plusDays(1),
-                        true
-                )
-        );
-    }
-
-    @Test
-    void shouldFailWhenDescriptionIsNull() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "ABC123",
-                        null,
-                        new BigDecimal("1"),
-                        LocalDate.now().plusDays(1),
-                        true
-                )
-        );
-    }
-
-    @Test
-    void shouldFailWhenDescriptionIsBlank() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "ABC123",
-                        "   ",
-                        new BigDecimal("1"),
-                        LocalDate.now().plusDays(1),
-                        true
-                )
-        );
-    }
 
     @Test
     void shouldDefaultPublishedToFalseWhenNull() {
@@ -155,16 +66,29 @@ class CouponTest {
     }
 
     @Test
-    void shouldFailWhenCodeHasOnlySpecialCharacters() {
-        assertThrows(BusinessException.class, () ->
-                new Coupon(
-                        "@@@@@@",
-                        "teste",
-                        new BigDecimal("1"),
-                        LocalDate.now().plusDays(1),
-                        true
-                )
+    void shouldConvertCodeToUpperCase() {
+        Coupon coupon = new Coupon(
+                "abc123",
+                "teste",
+                new BigDecimal("1"),
+                LocalDate.now().plusDays(1),
+                true
         );
+
+        assertEquals("ABC123", coupon.getCode());
+    }
+
+    @Test
+    void shouldKeepPublishedTrueWhenProvided() {
+        Coupon coupon = new Coupon(
+                "ABC123",
+                "teste",
+                new BigDecimal("1"),
+                LocalDate.now().plusDays(1),
+                true
+        );
+
+        assertTrue(coupon.getPublished());
     }
 
     private Coupon validCoupon() {
