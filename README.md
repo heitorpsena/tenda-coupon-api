@@ -46,7 +46,7 @@ src/main/java/br/com/tenda/tenda_coupon_api
 │   ├── exception
 │   └── validators
 │
-├── infra
+└── infra
     ├── controller
     └── dto
 
