@@ -36,12 +36,15 @@ infrastructure → controllers / DTOs
 ```
 src/main/java/br/com/tenda/tenda_coupon_api
 
+├── application
+│  
+├── config
+│   
 ├── domain
 │   ├── model
 │   ├── repository
-│   └── exception
-│
-├── application
+│   ├── exception
+│   └── validators
 │
 ├── infra
     ├── controller
