@@ -238,4 +238,4 @@ Realiza soft delete.
 
 # 👨‍💻 Autor
 
-Desenvolvido como desafio técnico para a Tenda.
+Desenvolvido por Heitor Sena como desafio técnico para a Tenda.
